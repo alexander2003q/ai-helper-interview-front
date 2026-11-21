@@ -1,0 +1,36 @@
+@use "../../styles/variables" as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  color: $ink;
+  font-weight: 700;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  &--primary {
+    background: $lime;
+  }
+
+  &--outline {
+    border: 1px solid rgba($ink, 0.14);
+    background: transparent;
+  }
+
+  &--ghost {
+    background: transparent;
+  }
+
+  &__label {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &:disabled {
+    opacity: 0.42;
+  }
+}

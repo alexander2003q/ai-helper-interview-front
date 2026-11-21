@@ -1,0 +1,31 @@
+@use "../../styles/variables" as *;
+
+.switch {
+  position: relative;
+  width: 44px;
+  height: 25px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #d8ddd7;
+
+  span {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 3px rgba($ink, 0.2);
+    transition: left 160ms ease;
+  }
+
+  &.is-on {
+    background: #99c421;
+
+    span {
+      left: 23px;
+    }
+  }
+}

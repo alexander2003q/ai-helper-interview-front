@@ -1,0 +1,39 @@
+@use "../../styles/variables" as *;
+
+.stepper {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border: 1px solid $border;
+  border-radius: 10px;
+  background: white;
+
+  &.is-disabled {
+    opacity: 0.35;
+  }
+
+  .button {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border-radius: 7px;
+    color: $ink;
+
+    &:hover:not(:disabled) {
+      background: #f0f2ee;
+    }
+
+    &:disabled {
+      opacity: 0.25;
+    }
+  }
+
+  > span {
+    width: 32px;
+    color: $ink;
+    font-family: "Roboto Mono", monospace;
+    font-size: 12px;
+    text-align: center;
+  }
+}

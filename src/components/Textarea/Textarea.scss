@@ -1,0 +1,13 @@
+@use "../../styles/variables" as *;
+
+.textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid $border;
+  outline: 0;
+  background: white;
+  color: $ink;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}

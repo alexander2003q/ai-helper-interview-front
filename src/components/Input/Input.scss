@@ -1,0 +1,25 @@
+@use "../../styles/variables" as *;
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid $border;
+  border-radius: 12px;
+  outline: 0;
+  background: white;
+  color: $ink;
+  transition: border-color 160ms ease;
+
+  &:focus {
+    border-color: #91b52c;
+  }
+
+  &--bare {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+}

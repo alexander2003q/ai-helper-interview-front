@@ -1,0 +1,134 @@
+@use "../../styles/variables" as *;
+
+.header {
+  position: sticky;
+  z-index: 50;
+  top: 0;
+  border-bottom: 1px solid rgba($ink, 0.08);
+  background: rgba($background, 0.92);
+  backdrop-filter: blur(16px);
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: min(100% - 80px, 1320px);
+    height: $header-height;
+    margin: 0 auto;
+  }
+
+  &__brand {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    gap: 12px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: $ink;
+    text-decoration: none;
+
+    .button__label {
+      gap: 12px;
+    }
+  }
+
+  &__logo {
+    display: grid;
+    width: 45px;
+    height: 45px;
+    place-items: center;
+    border-radius: 14px;
+    background: $ink;
+    color: $lime;
+  }
+
+  &__brand-name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.055em;
+
+    span {
+      color: #75a900;
+    }
+  }
+
+  &__caption {
+    color: #87918c;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__login {
+    justify-self: end;
+    min-width: 86px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 14px;
+
+    &:hover {
+      background: white;
+    }
+  }
+
+  &--dark {
+    border-color: rgb(255 255 255 / 8%);
+    background: rgb(18 32 26 / 94%);
+
+    .header__brand,
+    .header__login {
+      color: white;
+    }
+
+    .header__logo {
+      background: $lime;
+      color: $ink;
+    }
+
+    .header__brand-name span {
+      color: $lime;
+    }
+
+    .header__caption {
+      color: rgb(255 255 255 / 42%);
+    }
+
+    .header__login {
+      border-color: rgb(255 255 255 / 16%);
+
+      &:hover {
+        background: rgb(255 255 255 / 6%);
+      }
+    }
+  }
+}
+
+@media (width <= 700px) {
+  .header {
+    &__inner {
+      display: flex;
+      justify-content: space-between;
+      width: min(100% - 32px, 1320px);
+      height: 74px;
+    }
+
+    &__caption {
+      display: none;
+    }
+
+    &__logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+    }
+
+    &__brand-name {
+      font-size: 19px;
+    }
+
+    &__login {
+      min-width: 72px;
+      padding: 10px 16px;
+    }
+  }
+}
