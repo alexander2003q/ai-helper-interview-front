@@ -1,0 +1,41 @@
+.training-progress {
+  width: 275px;
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    color: rgb(255 255 255 / 38%);
+    font-size: 12px;
+    font-weight: 600;
+
+    strong {
+      margin: 0 5px;
+      color: #cffa4f;
+      font-family: "Roboto Mono", monospace;
+      font-weight: 500;
+    }
+  }
+
+  &__track {
+    height: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 10%);
+
+    span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: #cffa4f;
+      transition: width 220ms ease;
+    }
+  }
+}
+
+@media (width <= 700px) {
+  .training-progress {
+    width: 100%;
+  }
+}
