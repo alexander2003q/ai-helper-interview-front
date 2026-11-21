@@ -1,0 +1,55 @@
+{
+  "name": "ai-interview-trainer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "lint": "eslint . && stylelint \"src/**/*.scss\"",
+    "lint:fix": "eslint . --fix && stylelint \"src/**/*.scss\" --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "prepare": "husky || true"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "clsx": "^2.1.1",
+    "mobx": "^7.1.7",
+    "mobx-react-lite": "^5.1.4",
+    "react": "latest",
+    "react-dom": "latest",
+    "sass": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-react-hooks": "latest",
+    "eslint-plugin-react-refresh": "latest",
+    "globals": "latest",
+    "husky": "latest",
+    "lint-staged": "16.2.7",
+    "prettier": "latest",
+    "stylelint": "16.23.1",
+    "stylelint-config-prettier-scss": "1.0.0",
+    "stylelint-config-standard-scss": "15.0.1",
+    "typescript-eslint": "latest"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.scss": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,html,md,yml,yaml}": "prettier --write"
+  }
+}
