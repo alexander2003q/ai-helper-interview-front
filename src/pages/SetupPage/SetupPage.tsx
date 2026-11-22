@@ -1,7 +1,7 @@
-import { useState } from "react"
 import { Header } from "../../components/Header"
-import { SetupPageStore } from "../../store/SetupPageStore"
-import { useRootStore } from "../../store/RootStore"
+import { useRootStore } from "../../store/globals/root"
+import { useLocalStore } from "../../store/hooks"
+import { SetupPageStore } from "../../store/locals/SetupPageStore"
 import { Hero } from "./components/Hero"
 import { InterviewForm } from "./components/InterviewForm"
 import "./SetupPage.scss"
@@ -11,8 +11,8 @@ type SetupPageProps = {
 }
 
 export const SetupPage = ({ onStart }: SetupPageProps) => {
-  const { trainingSessionStore } = useRootStore()
-  const [store] = useState(() => new SetupPageStore(trainingSessionStore))
+  const rootStore = useRootStore()
+  const store = useLocalStore(() => new SetupPageStore({ rootStore }))
 
   return (
     <div id="top" className="setup-page">

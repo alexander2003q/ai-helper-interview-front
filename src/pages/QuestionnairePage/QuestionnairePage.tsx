@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite"
-import { useState } from "react"
 import { Header } from "../../components/Header"
-import { QuestionnairePageStore } from "../../store/QuestionnairePageStore"
-import { useRootStore } from "../../store/RootStore"
+import { useRootStore } from "../../store/globals/root"
+import { useLocalStore } from "../../store/hooks"
+import { QuestionnairePageStore } from "../../store/locals/QuestionnairePageStore"
 import { QuestionCard } from "./components/QuestionCard"
 import { TrainingConditions } from "./components/TrainingConditions"
 import { TrainingProgress } from "./components/TrainingProgress"
@@ -14,10 +14,8 @@ type QuestionnairePageProps = {
 
 export const QuestionnairePage = observer(
   ({ onExit }: QuestionnairePageProps) => {
-    const { trainingSessionStore } = useRootStore()
-    const [store] = useState(
-      () => new QuestionnairePageStore(trainingSessionStore),
-    )
+    const rootStore = useRootStore()
+    const store = useLocalStore(() => new QuestionnairePageStore({ rootStore }))
     const questionnaire = store.questionnaire
     const question = store.currentQuestion
 
@@ -32,7 +30,7 @@ export const QuestionnairePage = observer(
     if (!questionnaire || !question) return null
 
     const { topic, level, questions } = questionnaire
-    const conditions = trainingSessionStore.conditions
+    const conditions = rootStore.trainingSessionStore.conditions
 
     return (
       <div className="questionnaire-page">

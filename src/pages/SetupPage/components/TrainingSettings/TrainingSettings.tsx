@@ -8,7 +8,7 @@ import { Switch } from "../../../../components/Switch"
 import type {
   SetupPageStore,
   TrainingSectionKey,
-} from "../../../../store/SetupPageStore"
+} from "../../../../store/locals/SetupPageStore"
 import "./TrainingSettings.scss"
 
 type CounterRow = {

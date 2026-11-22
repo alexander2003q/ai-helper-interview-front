@@ -1,11 +1,11 @@
 import clsx from "clsx"
-import type { Question } from "../../../../api/questionnaire"
 import { Button } from "../../../../components/Button"
 import { Icon } from "../../../../components/Icon"
+import type { QuestionClient } from "../../../../entities/questionnaire"
 import "./QuestionCard.scss"
 
 type QuestionCardProps = {
-  question: Question
+  question: QuestionClient
   number: number
   selectedAnswerId: string | null
   isChecked: boolean
