@@ -1,0 +1,30 @@
+@use "../../styles/variables" as *;
+
+.segmented-control {
+  display: flex;
+  padding: 5px;
+  border-radius: 15px;
+  background: #eef0ec;
+
+  button {
+    display: flex;
+    min-height: 42px;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: #87908b;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 160ms ease;
+
+    &.is-active {
+      background: white;
+      color: $ink;
+      box-shadow: 0 2px 5px rgba($ink, 0.1);
+    }
+  }
+}

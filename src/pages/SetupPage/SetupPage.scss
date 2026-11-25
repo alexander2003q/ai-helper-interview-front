@@ -1,0 +1,40 @@
+@use "../../styles/variables" as *;
+
+.setup-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 26% 45%, rgb(255 255 255 / 72%), transparent 36%),
+    $background;
+
+  &__content {
+    display: grid;
+    width: min(100% - 80px, 1320px);
+    grid-template-columns: minmax(0, 0.96fr) minmax(570px, 1.04fr);
+    gap: 72px;
+    margin: 0 auto;
+    padding: $desktop-page-gap 0;
+  }
+}
+
+@media (width <= 1220px) {
+  .setup-page__content {
+    grid-template-columns: minmax(0, 0.85fr) minmax(540px, 1.15fr);
+    gap: 46px;
+  }
+}
+
+@media (width <= 1100px) {
+  .setup-page__content {
+    width: min(100% - 64px, 760px);
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0 0 80px;
+  }
+}
+
+@media (width <= 700px) {
+  .setup-page__content {
+    width: min(100% - 32px, 760px);
+    padding-bottom: 52px;
+  }
+}

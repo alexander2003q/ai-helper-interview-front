@@ -1,0 +1,8 @@
+export default {
+  extends: ["stylelint-config-standard-scss", "stylelint-config-prettier-scss"],
+  rules: {
+    "selector-class-pattern": null,
+    "scss/at-import-partial-extension": null,
+    "no-descending-specificity": null,
+  },
+}
