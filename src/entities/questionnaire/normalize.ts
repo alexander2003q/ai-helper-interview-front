@@ -21,6 +21,7 @@ const normalizeAnswerOption = (
 ): AnswerOptionClient => ({
   id: answer.id,
   text: answer.text,
+  ...(answer.explanation ? { explanation: answer.explanation } : {}),
 })
 
 const normalizeQuestion = (

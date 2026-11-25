@@ -27,6 +27,7 @@ export type CreateQuestionnaireParamsClient = {
 export type AnswerOptionClient = {
   id: string
   text: string
+  explanation?: string
 }
 
 export type QuestionClient = {

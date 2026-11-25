@@ -90,6 +90,7 @@ export class SetupPageStore implements ILocalStore {
       setSectionEnabled: actionBound,
       setSectionCount: actionBound,
       setHintsEnabled: actionBound,
+      setHintsPerTask: actionBound,
       setAttemptsPerTask: actionBound,
       createQuestionnaire: actionBound,
       destroy: actionBound,
@@ -152,6 +153,10 @@ export class SetupPageStore implements ILocalStore {
 
   setHintsEnabled(enabled: boolean) {
     this.trainingConfig.hints.enabled = enabled
+  }
+
+  setHintsPerTask(perTask: number) {
+    this.trainingConfig.hints.perTask = perTask
   }
 
   setAttemptsPerTask(attempts: number) {

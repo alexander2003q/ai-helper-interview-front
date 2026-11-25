@@ -27,6 +27,7 @@ export type CreateQuestionnaireRequestServer = {
 export type AnswerOptionServer = {
   id: string
   text: string
+  explanation?: string
 }
 
 export type QuestionServer = {

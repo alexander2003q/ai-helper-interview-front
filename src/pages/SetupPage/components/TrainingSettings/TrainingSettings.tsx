@@ -92,6 +92,17 @@ export const TrainingSettings = observer(({ store }: TrainingSettingsProps) => {
                 onChange={store.setHintsEnabled}
               />
             </div>
+            {store.trainingConfig.hints.enabled && (
+              <div className="training-settings__hint-count">
+                <span>Количество подсказок на задачу</span>
+                <Stepper
+                  value={store.trainingConfig.hints.perTask}
+                  min={1}
+                  max={3}
+                  onChange={store.setHintsPerTask}
+                />
+              </div>
+            )}
             <div className="toggle-row">
               <span>Количество попыток на задачу</span>
               <Stepper

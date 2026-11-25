@@ -28,6 +28,12 @@ export const QuestionCard = ({
   onNext,
 }: QuestionCardProps) => {
   const isCorrect = selectedAnswerId === question.correctAnswerId
+  const selectedAnswer = question.answers.find(
+    (answer) => answer.id === selectedAnswerId,
+  )
+  const correctAnswer = question.answers.find(
+    (answer) => answer.id === question.correctAnswerId,
+  )
 
   return (
     <section className="question-card" aria-labelledby="current-question">
@@ -71,16 +77,27 @@ export const QuestionCard = ({
         })}
       </div>
 
-      {isChecked && (
-        <div
-          className={clsx("question-card__feedback", {
-            "is-correct": isCorrect,
-            "is-wrong": !isCorrect,
-          })}
-          role="status"
-        >
-          <strong>{isCorrect ? "Верно" : "Не совсем"}</strong>
+      {isChecked && isCorrect && (
+        <div className="question-card__feedback is-correct" role="status">
+          <strong>Верно</strong>
           <span>{question.explanation}</span>
+        </div>
+      )}
+
+      {isChecked && !isCorrect && (
+        <div className="question-card__review" role="status">
+          <article className="question-card__review-card is-correct">
+            <span>Правильный ответ</span>
+            <strong>{correctAnswer?.text}</strong>
+            <p>{question.explanation}</p>
+          </article>
+          <article className="question-card__review-card is-wrong">
+            <span>Почему ваш вариант неверен</span>
+            <p>
+              {selectedAnswer?.explanation ??
+                "Этот вариант не соответствует условию вопроса."}
+            </p>
+          </article>
         </div>
       )}
 
@@ -88,12 +105,17 @@ export const QuestionCard = ({
         type="button"
         className="question-card__action"
         disabled={!selectedAnswerId}
+        icon={
+          isChecked && !isLast ? (
+            <Icon name="chevron-right" size={16} />
+          ) : undefined
+        }
         onClick={isChecked ? onNext : onCheck}
       >
         {isChecked
           ? isLast
             ? "Завершить тренировку"
-            : "Следующий вопрос"
+            : "Следующее задание"
           : "Проверить ответ"}
       </Button>
     </section>
