@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite"
+import { lazy, Suspense } from "react"
 import { Header } from "../../components/Header"
 import { useRootStore } from "../../store/globals/root"
 import { useLocalStore } from "../../store/hooks"
@@ -7,6 +8,14 @@ import { QuestionCard } from "./components/QuestionCard"
 import { TrainingConditions } from "./components/TrainingConditions"
 import { TrainingProgress } from "./components/TrainingProgress"
 import "./QuestionnairePage.scss"
+
+// CodeMirror is intentionally loaded only when the code task opens.
+// eslint-disable-next-line react-refresh/only-export-components
+const CodeTaskCard = lazy(() =>
+  import("./components/CodeTaskCard").then(({ CodeTaskCard }) => ({
+    default: CodeTaskCard,
+  })),
+)
 
 type QuestionnairePageProps = {
   onExit: () => void
@@ -17,19 +26,23 @@ export const QuestionnairePage = observer(
     const rootStore = useRootStore()
     const store = useLocalStore(() => new QuestionnairePageStore({ rootStore }))
     const questionnaire = store.questionnaire
+    const task = store.currentTask
     const question = store.currentQuestion
+    const codeTask = store.currentCodeTask
 
     const handleNext = () => {
-      if (!store.nextQuestion()) {
+      if (!store.nextTask()) {
         onExit()
         return
       }
       window.scrollTo({ top: 0, behavior: "smooth" })
     }
 
-    if (!questionnaire || !question) return null
+    if (!questionnaire || !task) {
+      return null
+    }
 
-    const { topic, level, questions } = questionnaire
+    const { topic, level } = questionnaire
     const conditions = rootStore.trainingSessionStore.conditions
 
     return (
@@ -45,7 +58,7 @@ export const QuestionnairePage = observer(
         <main className="questionnaire-page__content">
           <section className="questionnaire-page__overview">
             <div className="questionnaire-page__title">
-              <p>{question.type}</p>
+              <p>{task.type}</p>
               <h1>
                 {topic} <span>·</span> {level}
               </h1>
@@ -53,10 +66,10 @@ export const QuestionnairePage = observer(
             <div className="questionnaire-page__status">
               <TrainingProgress
                 current={store.currentNumber}
-                total={questions.length}
+                total={store.totalTasks}
               />
               <TrainingConditions
-                total={questions.length}
+                total={store.totalTasks}
                 format={conditions.format}
                 hints={conditions.hints}
                 attempts={conditions.attempts}
@@ -66,16 +79,35 @@ export const QuestionnairePage = observer(
             </div>
           </section>
 
-          <QuestionCard
-            question={question}
-            number={store.currentNumber}
-            selectedAnswerId={store.selectedAnswerId}
-            isChecked={store.isChecked}
-            isLast={store.isLastQuestion}
-            onSelect={store.selectAnswer}
-            onCheck={store.checkAnswer}
-            onNext={handleNext}
-          />
+          {codeTask ? (
+            <Suspense
+              fallback={
+                <div className="questionnaire-page__code-loading">
+                  Загружаем редактор…
+                </div>
+              }
+            >
+              <CodeTaskCard
+                task={codeTask}
+                store={store}
+                isLast={store.isLastTask}
+                onNext={handleNext}
+              />
+            </Suspense>
+          ) : (
+            question && (
+              <QuestionCard
+                question={question}
+                number={store.currentNumber}
+                selectedAnswerId={store.selectedAnswerId}
+                isChecked={store.isChecked}
+                isLast={store.isLastTask}
+                onSelect={store.selectAnswer}
+                onCheck={store.checkAnswer}
+                onNext={handleNext}
+              />
+            )
+          )}
         </main>
       </div>
     )

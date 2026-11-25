@@ -7,7 +7,7 @@ export class ApiStore {
     ResponseData,
     RequestData = undefined,
     ErrorData = ApiErrorResponseServer,
-  >(config: ApiRequestConfig) {
+  >(config: ApiRequestConfig<ResponseData, RequestData>) {
     return new ApiRequest<ResponseData, RequestData, ErrorData>(config)
   }
 }

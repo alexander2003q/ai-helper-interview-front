@@ -1,8 +1,13 @@
 export type {
   AnswerOptionClient,
+  CodeTaskClient,
+  CodeTaskExampleClient,
+  CodeTaskLanguageClient,
+  CodeTaskTestClient,
   CreateQuestionnaireParamsClient,
   QuestionnaireClient,
   QuestionClient,
+  TrainingTaskClient,
   TrainingConfigClient,
   TrainingSectionClient,
 } from "./client"
@@ -13,9 +18,15 @@ export {
 } from "./normalize"
 export type {
   AnswerOptionServer,
+  CodeTaskLanguageServer,
+  CodeTaskServer,
   CreateQuestionnaireRequestServer,
+  LegacyQuestionServer,
+  QuestionnaireLegacyServer,
   QuestionnaireServer,
+  QuestionnaireTasksServer,
   QuestionServer,
+  TrainingTaskServer,
   TrainingConfigServer,
   TrainingSectionServer,
 } from "./server"

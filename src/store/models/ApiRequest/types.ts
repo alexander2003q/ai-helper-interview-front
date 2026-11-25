@@ -9,8 +9,19 @@ export type ApiCallParams<RequestData> = {
   headers?: Record<string, string>
 }
 
-export type ApiRequestConfig = ApiEndpoint & {
+export type ApiMockResponse<ResponseData, RequestData> = (
+  params: ApiCallParams<RequestData>,
+) => ResponseData | Promise<ResponseData>
+
+export type ApiMockConfig<ResponseData, RequestData> = {
+  enabled: boolean
+  response: ApiMockResponse<ResponseData, RequestData>
+  delayMs?: number
+}
+
+export type ApiRequestConfig<ResponseData, RequestData> = ApiEndpoint & {
   timeoutMs?: number
+  mock?: ApiMockConfig<ResponseData, RequestData>
 }
 
 export type ApiRequestError<ErrorData = ApiErrorResponseServer> = {

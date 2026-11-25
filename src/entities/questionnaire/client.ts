@@ -30,6 +30,7 @@ export type AnswerOptionClient = {
 }
 
 export type QuestionClient = {
+  kind: "question"
   id: number
   type: string
   prompt: string
@@ -38,6 +39,38 @@ export type QuestionClient = {
   explanation: string
 }
 
+export type CodeTaskLanguageClient = "javascript" | "typescript"
+
+export type CodeTaskExampleClient = {
+  input: string
+  output: string
+}
+
+export type CodeTaskTestClient = {
+  id: string
+  title: string
+}
+
+export type CodeTaskClient = {
+  kind: "code"
+  id: number
+  type: string
+  title: string
+  description: string
+  language: CodeTaskLanguageClient
+  fileName: string
+  starterCode: string
+  examples: CodeTaskExampleClient[]
+  tests: CodeTaskTestClient[]
+  hints: string[]
+  solution: {
+    code: string
+    explanation: string
+  }
+}
+
+export type TrainingTaskClient = QuestionClient | CodeTaskClient
+
 export type QuestionnaireClient = {
   id: string
   topic: string
@@ -45,5 +78,5 @@ export type QuestionnaireClient = {
   level: LevelLabel
   responseFormat: ResponseFormat
   total: number
-  questions: QuestionClient[]
+  tasks: TrainingTaskClient[]
 }

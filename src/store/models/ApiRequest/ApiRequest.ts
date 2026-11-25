@@ -17,6 +17,26 @@ import type {
 } from "./types"
 
 const DEFAULT_TIMEOUT_MS = 100_000
+const DEFAULT_MOCK_DELAY_MS = 400
+
+const wait = (delayMs: number, signal: AbortSignal) =>
+  new Promise<void>((resolve, reject) => {
+    if (signal.aborted) {
+      reject(new DOMException("Request aborted", "AbortError"))
+      return
+    }
+
+    const handleAbort = () => {
+      window.clearTimeout(timeoutId)
+      reject(new DOMException("Request aborted", "AbortError"))
+    }
+    const timeoutId = window.setTimeout(() => {
+      signal.removeEventListener("abort", handleAbort)
+      resolve()
+    }, delayMs)
+
+    signal.addEventListener("abort", handleAbort, { once: true })
+  })
 
 const appendQueryValue = (
   searchParams: URLSearchParams,
@@ -69,13 +89,15 @@ export class ApiRequest<
   RequestData = undefined,
   ErrorData = ApiErrorResponseServer,
 > implements ILocalStore {
-  private readonly _config: Required<Pick<ApiRequestConfig, "timeoutMs">> &
-    Omit<ApiRequestConfig, "timeoutMs">
+  private readonly _config: Required<
+    Pick<ApiRequestConfig<ResponseData, RequestData>, "timeoutMs">
+  > &
+    Omit<ApiRequestConfig<ResponseData, RequestData>, "timeoutMs">
   private _controller: AbortController | null = null
   private _callId = 0
   private _state: ApiRequestState = "initial"
 
-  constructor(config: ApiRequestConfig) {
+  constructor(config: ApiRequestConfig<ResponseData, RequestData>) {
     this._config = {
       ...config,
       timeoutMs: config.timeoutMs ?? DEFAULT_TIMEOUT_MS,
@@ -112,6 +134,28 @@ export class ApiRequest<
     }, this._config.timeoutMs)
 
     try {
+      if (this._config.mock?.enabled) {
+        await wait(
+          this._config.mock.delayMs ?? DEFAULT_MOCK_DELAY_MS,
+          controller.signal,
+        )
+        const data = await this._config.mock.response(params)
+
+        if (controller.signal.aborted) {
+          throw new DOMException("Request aborted", "AbortError")
+        }
+
+        if (callId !== this._callId) {
+          return { isError: true, isCancelled: true }
+        }
+
+        runInAction(() => {
+          this._state = "success"
+        })
+
+        return { isError: false, isCancelled: false, data }
+      }
+
       const hasBody = params.data !== undefined
       const response = await fetch(
         createRequestUrl(this._config.url, params.params),

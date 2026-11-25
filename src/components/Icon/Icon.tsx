@@ -12,6 +12,8 @@ export type IconName =
   | "minus"
   | "plus"
   | "check"
+  | "bulb"
+  | "play"
 
 type IconProps = SVGProps<SVGSVGElement> & {
   name: IconName
@@ -150,6 +152,22 @@ export const Icon = ({ name, size = 20, ...props }: IconProps) => {
         strokeLinejoin="round"
       />
     ),
+    bulb: (
+      <>
+        <path
+          d="M8.5 15.5c-1.5-1.1-2.5-2.9-2.5-5a6 6 0 1 1 12 0c0 2.1-1 3.9-2.5 5-.7.5-1 1.2-1 2h-5c0-.8-.3-1.5-1-2Z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M9.5 21h5M9.5 18h5"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </>
+    ),
+    play: <path d="m9 6 9 6-9 6V6Z" fill="currentColor" />,
   }
 
   return (

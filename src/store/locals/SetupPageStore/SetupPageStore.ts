@@ -5,7 +5,8 @@ import {
   observable,
   runInAction,
 } from "mobx"
-import { ENDPOINTS } from "../../../config/api"
+import { API_MOCK_FLAGS, ENDPOINTS } from "../../../config/api"
+import { createQuestionnaireMock } from "../../../config/api/mocks"
 import type { ApiErrorResponseServer } from "../../../config/api"
 import {
   normalizeCreateQuestionnaireRequest,
@@ -60,7 +61,14 @@ export class SetupPageStore implements ILocalStore {
         QuestionnaireServer,
         CreateQuestionnaireRequestServer,
         ApiErrorResponseServer
-      >(ENDPOINTS.questionnaires.create),
+      >({
+        ...ENDPOINTS.questionnaires.create,
+        mock: {
+          enabled: API_MOCK_FLAGS.questionnaires.create,
+          response: createQuestionnaireMock,
+          delayMs: 500,
+        },
+      }),
     }
 
     makeObservable(this, {
