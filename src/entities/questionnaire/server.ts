@@ -8,7 +8,6 @@ export type TrainingSectionServer = {
 export type TrainingConfigServer = {
   theory: TrainingSectionServer
   code: TrainingSectionServer
-  experience: TrainingSectionServer
   hints: {
     enabled: boolean
     perTask: number
@@ -77,6 +76,11 @@ type QuestionnaireBaseServer = {
   level: LevelLabel
   responseFormat: ResponseFormat
   total: number
+  hints?: {
+    enabled: boolean
+    perTask: number
+  }
+  attemptsPerTask?: number
 }
 
 export type QuestionnaireTasksServer = QuestionnaireBaseServer & {

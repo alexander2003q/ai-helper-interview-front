@@ -82,17 +82,19 @@ export class QuestionnairePageStore implements ILocalStore {
   }
 
   get hintsEnabled() {
-    return Boolean(
+    const hints =
+      this.questionnaire?.hints ??
       this._rootStore.trainingSessionStore.request?.trainingConfig.hints
-        .enabled,
-    )
+    return Boolean(hints?.enabled)
   }
 
   get hintsPerTask() {
     if (!this.hintsEnabled) return 0
     return (
+      this.questionnaire?.hints?.perTask ??
       this._rootStore.trainingSessionStore.request?.trainingConfig.hints
-        .perTask ?? 0
+        .perTask ??
+      0
     )
   }
 
@@ -106,8 +108,10 @@ export class QuestionnairePageStore implements ILocalStore {
 
   get maxAttempts() {
     return (
+      this.questionnaire?.attemptsPerTask ??
       this._rootStore.trainingSessionStore.request?.trainingConfig
-        .attemptsPerTask ?? 1
+        .attemptsPerTask ??
+      1
     )
   }
 

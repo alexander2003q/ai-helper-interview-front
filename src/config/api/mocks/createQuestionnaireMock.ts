@@ -107,7 +107,13 @@ const theoryTemplates: Array<Omit<QuestionServer, "id">> = [
   },
 ]
 
-const createCodeTask = (id: number): CodeTaskServer => ({
+const codeHintPool = [
+  "Объект Set хранит только уникальные значения.",
+  "Set можно превратить обратно в массив через spread.",
+  "Порядок первого вхождения Set сохраняет сам.",
+]
+
+const createCodeTask = (id: number, hintCount: number): CodeTaskServer => ({
   kind: "code",
   id,
   type: "Микро-задача с кодом",
@@ -127,10 +133,7 @@ const createCodeTask = (id: number): CodeTaskServer => ({
     { id: "empty", title: "Пустой массив" },
     { id: "mixed", title: "Смешанные типы" },
   ],
-  hints: [
-    "Объект Set хранит только уникальные значения. Его можно превратить обратно в массив.",
-    "Попробуйте объединить new Set(items) со spread-оператором внутри квадратных скобок.",
-  ],
+  hints: codeHintPool.slice(0, hintCount),
   solution: {
     code: "return [...new Set(items)]",
     explanation:
@@ -150,15 +153,18 @@ export const createQuestionnaireMock: ApiMockResponse<
   const codeCount = data.trainingConfig.code.enabled
     ? data.trainingConfig.code.count
     : 0
+  const hintCount = data.trainingConfig.hints.enabled
+    ? data.trainingConfig.hints.perTask
+    : 0
 
   const questions = Array.from({ length: theoryCount }, (_, index) => ({
     ...theoryTemplates[index % theoryTemplates.length],
-    id: codeCount + index + 1,
+    id: index + 1,
   }))
   const codeTasks = Array.from({ length: codeCount }, (_, index) =>
-    createCodeTask(index + 1),
+    createCodeTask(theoryCount + index + 1, hintCount),
   )
-  const tasks = [...codeTasks, ...questions]
+  const tasks = [...questions, ...codeTasks]
 
   return {
     id: `questionnaire-mock-${Date.now()}`,
@@ -167,6 +173,11 @@ export const createQuestionnaireMock: ApiMockResponse<
     level: levelLabels[data.level],
     responseFormat: data.responseFormat,
     total: tasks.length,
+    hints: {
+      enabled: data.trainingConfig.hints.enabled,
+      perTask: hintCount,
+    },
+    attemptsPerTask: data.trainingConfig.attemptsPerTask,
     tasks,
   }
 }

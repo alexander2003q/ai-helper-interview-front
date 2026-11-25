@@ -69,6 +69,10 @@ export const normalizeQuestionnaire = (
     level: questionnaire.level,
     responseFormat: questionnaire.responseFormat,
     total: tasks.length,
+    ...(questionnaire.hints ? { hints: { ...questionnaire.hints } } : {}),
+    ...(questionnaire.attemptsPerTask
+      ? { attemptsPerTask: questionnaire.attemptsPerTask }
+      : {}),
     tasks,
   }
 }
@@ -83,7 +87,6 @@ export const normalizeCreateQuestionnaireRequest = (
   trainingConfig: {
     theory: { ...params.trainingConfig.theory },
     code: { ...params.trainingConfig.code },
-    experience: { ...params.trainingConfig.experience },
     hints: { ...params.trainingConfig.hints },
     attemptsPerTask: params.trainingConfig.attemptsPerTask,
   },

@@ -8,7 +8,6 @@ export type TrainingSectionClient = {
 export type TrainingConfigClient = {
   theory: TrainingSectionClient
   code: TrainingSectionClient
-  experience: TrainingSectionClient
   hints: {
     enabled: boolean
     perTask: number
@@ -79,5 +78,10 @@ export type QuestionnaireClient = {
   level: LevelLabel
   responseFormat: ResponseFormat
   total: number
+  hints?: {
+    enabled: boolean
+    perTask: number
+  }
+  attemptsPerTask?: number
   tasks: TrainingTaskClient[]
 }

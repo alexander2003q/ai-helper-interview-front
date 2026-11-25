@@ -1,5 +1,5 @@
 export const API_MOCK_FLAGS = {
   questionnaires: {
-    create: true,
+    create: false,
   },
 } as const

@@ -1,1 +1,1 @@
-export type TrainingSectionKey = "theory" | "code" | "experience"
+export type TrainingSectionKey = "theory" | "code"

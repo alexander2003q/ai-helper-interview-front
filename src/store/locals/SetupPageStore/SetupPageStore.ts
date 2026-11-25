@@ -49,7 +49,6 @@ export class SetupPageStore implements ILocalStore {
   trainingConfig: TrainingConfigClient = {
     theory: { enabled: true, count: 8 },
     code: { enabled: true, count: 2 },
-    experience: { enabled: true, count: 3 },
     hints: { enabled: true, perTask: 2 },
     attemptsPerTask: 3,
   }
@@ -102,16 +101,15 @@ export class SetupPageStore implements ILocalStore {
   }
 
   get canSubmit() {
-    return (
-      this.topics.length > 0 &&
-      this.trainingConfig.theory.enabled &&
-      this.trainingConfig.theory.count > 0 &&
-      !this.isSubmitting
-    )
+    const { theory, code } = this.trainingConfig
+    const hasRequestedTask =
+      (theory.enabled && theory.count > 0) || (code.enabled && code.count > 0)
+
+    return this.topics.length > 0 && hasRequestedTask && !this.isSubmitting
   }
 
   get trainingSummary() {
-    const sectionKeys: TrainingSectionKey[] = ["theory", "code", "experience"]
+    const sectionKeys: TrainingSectionKey[] = ["theory", "code"]
     const taskCount = sectionKeys.reduce((total, key) => {
       const section = this.trainingConfig[key]
       return total + (section.enabled ? section.count : 0)
@@ -176,7 +174,6 @@ export class SetupPageStore implements ILocalStore {
       trainingConfig: {
         theory: { ...this.trainingConfig.theory },
         code: { ...this.trainingConfig.code },
-        experience: { ...this.trainingConfig.experience },
         hints: { ...this.trainingConfig.hints },
         attemptsPerTask: this.trainingConfig.attemptsPerTask,
       },

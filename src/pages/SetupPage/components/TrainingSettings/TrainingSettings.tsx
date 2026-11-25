@@ -19,9 +19,8 @@ type CounterRow = {
 }
 
 const rows: CounterRow[] = [
-  { key: "theory", label: "Теоретические вопросы", min: 3, max: 20 },
-  { key: "code", label: "Микро-задачи с кодом", min: 0, max: 10 },
-  { key: "experience", label: "Вопросы по опыту", min: 0, max: 10 },
+  { key: "theory", label: "Теоретические вопросы", min: 1, max: 20 },
+  { key: "code", label: "Микро-задачи с кодом", min: 1, max: 10 },
 ]
 
 type TrainingSettingsProps = {
@@ -66,7 +65,6 @@ export const TrainingSettings = observer(({ store }: TrainingSettingsProps) => {
                   <label>
                     <Checkbox
                       checked={section.enabled}
-                      disabled={row.key === "theory"}
                       onChange={(event) =>
                         store.setSectionEnabled(row.key, event.target.checked)
                       }

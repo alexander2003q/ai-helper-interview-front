@@ -24,15 +24,21 @@ export class TrainingSessionStore {
   }
 
   get conditions() {
-    const hints = this.request?.trainingConfig.hints
+    const hints =
+      this.questionnaire?.hints ?? this.request?.trainingConfig.hints
+    const attempts =
+      this.questionnaire?.attemptsPerTask ??
+      this.request?.trainingConfig.attemptsPerTask ??
+      1
 
     return {
       format:
-        this.request?.responseFormat === "voice"
+        this.request?.responseFormat === "voice" ||
+        this.questionnaire?.responseFormat === "voice"
           ? "Голосовой ответ"
           : "Текстовый ответ",
       hints: hints?.enabled ? hints.perTask : 0,
-      attempts: this.request?.trainingConfig.attemptsPerTask ?? 1,
+      attempts,
     }
   }
 
