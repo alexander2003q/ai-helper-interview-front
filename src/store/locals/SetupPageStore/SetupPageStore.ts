@@ -23,6 +23,7 @@ import type {
 import type { RootStoreType } from "../../globals/root"
 import type { ILocalStore } from "../../interfaces"
 import type { ApiRequest } from "../../models/ApiRequest"
+import { MAX_TOPICS, popularTopics, topicGroups } from "./config"
 import { getCreateQuestionnaireErrorMessage } from "./errors"
 import type { TrainingSectionKey } from "./types"
 
@@ -41,6 +42,8 @@ export class SetupPageStore implements ILocalStore {
   }
 
   topics = ["React"]
+  topicSearch = ""
+  isTopicListOpen = false
   vacancy = ""
   level: Level = "middle"
   responseFormat: ResponseFormat = "text"
@@ -72,6 +75,8 @@ export class SetupPageStore implements ILocalStore {
 
     makeObservable(this, {
       topics: observable,
+      topicSearch: observable,
+      isTopicListOpen: observable,
       vacancy: observable,
       level: observable,
       responseFormat: observable,
@@ -81,7 +86,12 @@ export class SetupPageStore implements ILocalStore {
       isSubmitting: computed,
       canSubmit: computed,
       trainingSummary: computed,
-      setTopics: actionBound,
+      visibleTopics: computed,
+      filteredTopicGroups: computed,
+      isTopicLimitReached: computed,
+      toggleTopic: actionBound,
+      setTopicSearch: actionBound,
+      toggleTopicList: actionBound,
       setVacancy: actionBound,
       setLevel: actionBound,
       setResponseFormat: actionBound,
@@ -121,8 +131,51 @@ export class SetupPageStore implements ILocalStore {
     }
   }
 
-  setTopics(topics: string[]) {
-    this.topics = topics
+  get visibleTopics() {
+    const selectedExtras = this.topics.filter(
+      (topic) => !popularTopics.includes(topic),
+    )
+    return [...popularTopics, ...selectedExtras]
+  }
+
+  get filteredTopicGroups() {
+    const query = this.topicSearch.trim().toLowerCase()
+
+    return topicGroups
+      .map((group) => ({
+        title: group.title,
+        topics: group.topics.filter((topic) =>
+          topic.toLowerCase().includes(query),
+        ),
+      }))
+      .filter((group) => group.topics.length > 0)
+  }
+
+  get isTopicLimitReached() {
+    return this.topics.length >= MAX_TOPICS
+  }
+
+  isPopularTopic(topic: string) {
+    return popularTopics.includes(topic)
+  }
+
+  toggleTopic(topic: string) {
+    if (this.topics.includes(topic)) {
+      this.topics = this.topics.filter((item) => item !== topic)
+      return
+    }
+
+    if (!this.isTopicLimitReached) {
+      this.topics = [...this.topics, topic]
+    }
+  }
+
+  setTopicSearch(search: string) {
+    this.topicSearch = search
+  }
+
+  toggleTopicList() {
+    this.isTopicListOpen = !this.isTopicListOpen
   }
 
   setVacancy(vacancy: string) {

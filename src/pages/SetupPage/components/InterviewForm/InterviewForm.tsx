@@ -50,7 +50,7 @@ export const InterviewForm = observer(
           </div>
 
           <div className="interview-card__fields">
-            <TopicSelector value={store.topics} onChange={store.setTopics} />
+            <TopicSelector store={store} />
 
             <div className="vacancy-field">
               <div className="form-label-row">

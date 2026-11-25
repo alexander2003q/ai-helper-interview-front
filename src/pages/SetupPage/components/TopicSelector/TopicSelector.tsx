@@ -1,74 +1,29 @@
 import clsx from "clsx"
-import { useMemo, useState } from "react"
+import { observer } from "mobx-react-lite"
 import { Button } from "../../../../components/Button"
 import { Icon } from "../../../../components/Icon"
 import { Input } from "../../../../components/Input"
+import type { SetupPageStore } from "../../../../store/locals/SetupPageStore"
 import "./TopicSelector.scss"
 
-const popularTopics = [
-  "React",
-  "Frontend",
-  "JavaScript",
-  "Python",
-  "Product",
-  "Data Science",
-]
-
-const topicGroups = {
-  Разработка: ["Vue", "Angular", "Node.js", "Java", "C#", "Go"],
-  Аналитика: ["SQL", "Data Engineering", "Machine Learning"],
-  Дизайн: ["UX/UI", "Product Design"],
-  Менеджмент: ["QA", "DevOps", "System Design", "Project Management"],
-}
-
 type TopicSelectorProps = {
-  value: string[]
-  onChange: (topics: string[]) => void
+  store: SetupPageStore
 }
 
-export const TopicSelector = ({ value, onChange }: TopicSelectorProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [search, setSearch] = useState("")
-
-  const groups = useMemo(() => {
-    const query = search.trim().toLowerCase()
-    return Object.entries(topicGroups)
-      .map(
-        ([group, topics]) =>
-          [
-            group,
-            topics.filter((topic) => topic.toLowerCase().includes(query)),
-          ] as const,
-      )
-      .filter(([, topics]) => topics.length > 0)
-  }, [search])
-
-  const toggleTopic = (topic: string) => {
-    if (value.includes(topic)) {
-      onChange(value.filter((item) => item !== topic))
-      return
-    }
-    if (value.length < 3) onChange([...value, topic])
-  }
-
-  const visibleTopics = [
-    ...popularTopics,
-    ...value.filter((topic) => !popularTopics.includes(topic)),
-  ]
-
+export const TopicSelector = observer(({ store }: TopicSelectorProps) => {
   return (
     <fieldset className="topic-selector">
       <div className="form-label-row">
         <legend>Направление</legend>
-        <span className={clsx({ "is-limit": value.length === 3 })}>
+        <span className={clsx({ "is-limit": store.isTopicLimitReached })}>
           Можно выбрать до 3 направлений
         </span>
       </div>
       <div className="topic-selector__body">
         <div className="topic-selector__pills">
-          {visibleTopics.map((topic) => {
-            const selected = value.includes(topic)
-            const canRemove = selected && !popularTopics.includes(topic)
+          {store.visibleTopics.map((topic) => {
+            const selected = store.topics.includes(topic)
+            const canRemove = selected && !store.isPopularTopic(topic)
 
             return (
               <Button
@@ -78,7 +33,7 @@ export const TopicSelector = ({ value, onChange }: TopicSelectorProps) => {
                 className={clsx({ "is-selected": selected })}
                 aria-pressed={selected}
                 icon={canRemove ? <Icon name="close" size={14} /> : undefined}
-                onClick={() => toggleTopic(topic)}
+                onClick={() => store.toggleTopic(topic)}
               >
                 {topic}
               </Button>
@@ -88,47 +43,50 @@ export const TopicSelector = ({ value, onChange }: TopicSelectorProps) => {
             variant="ghost"
             type="button"
             className="topic-selector__more"
-            aria-expanded={isOpen}
+            aria-expanded={store.isTopicListOpen}
             icon={
               <Icon
                 name="chevron-down"
                 size={15}
-                className={clsx({ "is-rotated": isOpen })}
+                className={clsx({ "is-rotated": store.isTopicListOpen })}
               />
             }
-            onClick={() => setIsOpen((current) => !current)}
+            onClick={store.toggleTopicList}
           >
             Другие темы
           </Button>
         </div>
 
-        {isOpen && (
+        {store.isTopicListOpen && (
           <div className="topic-selector__dropdown">
             <label className="topic-selector__search">
               <Icon name="search" size={17} />
               <Input
                 variant="bare"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                value={store.topicSearch}
+                onChange={(event) => store.setTopicSearch(event.target.value)}
                 placeholder="Найти тему"
                 autoFocus
               />
             </label>
             <div className="topic-selector__groups">
-              {groups.map(([group, topics]) => (
-                <div key={group}>
-                  <p>{group}</p>
+              {store.filteredTopicGroups.map((group) => (
+                <div key={group.title}>
+                  <p>{group.title}</p>
                   <div>
-                    {topics.map((topic) => (
+                    {group.topics.map((topic) => (
                       <Button
                         variant="ghost"
                         type="button"
                         key={topic}
                         className={clsx({
-                          "is-selected": value.includes(topic),
+                          "is-selected": store.topics.includes(topic),
                         })}
-                        disabled={!value.includes(topic) && value.length >= 3}
-                        onClick={() => toggleTopic(topic)}
+                        disabled={
+                          !store.topics.includes(topic) &&
+                          store.isTopicLimitReached
+                        }
+                        onClick={() => store.toggleTopic(topic)}
                       >
                         {topic}
                       </Button>
@@ -136,7 +94,7 @@ export const TopicSelector = ({ value, onChange }: TopicSelectorProps) => {
                   </div>
                 </div>
               ))}
-              {groups.length === 0 && (
+              {store.filteredTopicGroups.length === 0 && (
                 <span className="topic-selector__empty">Ничего не найдено</span>
               )}
             </div>
@@ -145,4 +103,4 @@ export const TopicSelector = ({ value, onChange }: TopicSelectorProps) => {
       </div>
     </fieldset>
   )
-}
+})
